@@ -7,20 +7,20 @@ public class ResourceManager : MonoBehaviour
     public ClickableScript basicClicker;
     public Text idleClicksLabel, levelLabel, tillLevelLabel;
 
-    int clicksPerSecond, level, tillLevel;
+    int clicksPerSecond, level, tillLevel, barrackClicks;
 
     public void Awake()
     {
         level = 1;
         tillLevel = 1;
         clicksPerSecond = 0;
-        basicClicker.clickEvent += Click;
+        basicClicker.clickEvent += BarracksClick;
         StartCoroutine(IdleCoroutine());
     }
 
     IEnumerator IdleCoroutine () {
         while (true) {
-            basicClicker.cnt += clicksPerSecond;
+            basicClicker.AddProgress(clicksPerSecond);
             yield return new WaitForSeconds(1f);
         }
     }
@@ -31,10 +31,10 @@ public class ResourceManager : MonoBehaviour
         tillLevelLabel.text = "Clicks Until Next Level: " + tillLevel;
     }
 
-    void Click() {
+    void BarracksClick() {
         tillLevel--;
         if (tillLevel <= 0) {
-            clicksPerSecond += level * level;
+            clicksPerSecond += 1;
             level++;
             tillLevel = level * level;
         }
